@@ -26,3 +26,5 @@ target_include_directories(
   gpxpy_core PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/core/include>")
 
 target_compile_features(gpxpy_core PUBLIC cxx_std_17)
+
+set_property(TARGET gpxpy_core PROPERTY POSITION_INDEPENDENT_CODE ON)
