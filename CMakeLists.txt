@@ -1,8 +1,11 @@
-message(STATUS "Building Python language bindings for GPRat.")
+cmake_minimum_required(VERSION 3.23)
 
-cmake_minimum_required(VERSION 3.16)
-
-project(gprat)
+project(
+  GPRat
+  VERSION 0.1.0
+  DESCRIPTION "Leveraging HPX for Gaussian Processes in Python"
+  HOMEPAGE_URL "https://github.com/constracktor/GPRat"
+  LANGUAGES CXX)
 
 include(CMakeDependentOption)
 
@@ -27,6 +30,13 @@ if(GPRAT_ENABLE_FORMAT_TARGETS)
   endif()
 endif()
 
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+  # Our installs follow the standard GNU directory layout. This include needs to
+  # come first since we need the CMAKE_INSTALL_* in the CMakeLists.txt of each
+  # target.
+  include(GNUInstallDirs)
+endif()
+
 if(GPRAT_BUILD_CORE)
   set(MKL_INTERFACE_FULL "intel_lp64")
   set(MKL_THREADING "sequential")
@@ -37,5 +47,44 @@ if(GPRAT_BUILD_CORE)
   add_subdirectory(core)
   if(GPRAT_BUILD_BINDINGS)
     add_subdirectory(bindings)
+  endif()
+endif()
+
+if(NOT CMAKE_SKIP_INSTALL_RULES AND GPRAT_BUILD_CORE)
+  include(CMakePackageConfigHelpers)
+
+  # find_package(<package>) call for consumers to find this project
+  set(package GPRat)
+
+  write_basic_package_version_file("${package}ConfigVersion.cmake"
+                                   COMPATIBILITY SameMajorVersion)
+
+  # Allow package maintainers to freely override the path for the configs
+  set(GPRat_INSTALL_CMAKEDIR
+      "${CMAKE_INSTALL_LIBDIR}/cmake/${package}"
+      CACHE STRING
+            "CMake package config location relative to the install prefix")
+  set_property(CACHE GPRat_INSTALL_CMAKEDIR PROPERTY TYPE PATH)
+  mark_as_advanced(GPRat_INSTALL_CMAKEDIR)
+
+  install(
+    FILES cmake/install-config.cmake
+    DESTINATION "${GPRat_INSTALL_CMAKEDIR}"
+    RENAME "${package}Config.cmake"
+    COMPONENT Development)
+
+  install(
+    FILES "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
+    DESTINATION "${GPRat_INSTALL_CMAKEDIR}"
+    COMPONENT Development)
+
+  install(
+    EXPORT GPRatTargets
+    NAMESPACE GPRat::
+    DESTINATION "${GPRat_INSTALL_CMAKEDIR}"
+    COMPONENT Development)
+
+  if(PROJECT_IS_TOP_LEVEL)
+    include(CPack)
   endif()
 endif()

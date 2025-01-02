@@ -9,6 +9,8 @@ add_library(
   src/gp_uncertainty.cpp
   src/utils_c.cpp)
 
+# We'd like to consume it just as core under the GPRat namespace
+set_property(TARGET gprat_core PROPERTY EXPORT_NAME core)
 add_library(GPRat::core ALIAS gprat_core)
 
 # Add them as PRIVATE sources here so they show up in project files Can't use
@@ -29,7 +31,20 @@ target_compile_features(gprat_core PUBLIC cxx_std_17)
 
 set_property(TARGET gprat_core PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-install(TARGETS gprat_core DESTINATION "${CMAKE_INSTALL_PREFIX}/install/lib")
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+  # We need to manually install those into CMAKE_INSTALL_INCLUDEDIR. Below
+  # install(TARGETS ...) only setups the paths for the exported targets.
+  install(
+    DIRECTORY include/
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+    COMPONENT Development)
 
-install(DIRECTORY include/
-        DESTINATION "${CMAKE_INSTALL_PREFIX}/install/include")
+  install(
+    TARGETS gprat_core
+    EXPORT GPRatTargets
+    RUNTIME COMPONENT Runtime
+    LIBRARY COMPONENT Runtime NAMELINK_COMPONENT Development
+    ARCHIVE COMPONENT Development
+    INCLUDES
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
