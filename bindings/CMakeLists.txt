@@ -25,8 +25,28 @@ source_group("Source Files" FILES ${SOURCE_FILES})
 source_group("Header Files" FILES ${HEADER_FILES})
 
 pybind11_add_module(gprat_bindings ${SOURCE_FILES} ${HEADER_FILES})
-# must match the Python module name!
-set_target_properties(gprat_bindings PROPERTIES OUTPUT_NAME "gprat")
 
-install(TARGETS gprat_bindings DESTINATION "${CMAKE_INSTALL_PREFIX}")
+# must match the Python module name!
+set_property(TARGET gprat_bindings PROPERTY OUTPUT_NAME "gprat")
+
+# We'd like to consume it just as `bindings` under the GPRat namespace
+set_property(TARGET gprat_bindings PROPERTY EXPORT_NAME bindings)
+add_library(GPRat::bindings ALIAS gprat_bindings)
+
 target_link_libraries(gprat_bindings PUBLIC GPRat::core)
+
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+  install(
+    TARGETS gprat_bindings
+    EXPORT GPRatTargets
+    RUNTIME COMPONENT Runtime
+    LIBRARY COMPONENT Runtime NAMELINK_COMPONENT Development
+    ARCHIVE COMPONENT Development
+    INCLUDES
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+    # XXX: Due to pybind11_add_module() CMake doesn't use the defaults from
+    # GNUInstallDirs, forcing us to write these out.
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
