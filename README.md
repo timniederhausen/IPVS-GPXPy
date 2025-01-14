@@ -39,6 +39,7 @@ The following options can be set to include / exclude parts of the project:
 | GPRAT_BUILD_CORE            | Enable/Disable building of the core library    | ON              |
 | GPRAT_BUILD_BINDINGS        | Enable/Disable building of the Python bindings | ON              |
 | GPRAT_ENABLE_FORMAT_TARGETS | Enable/disable code formatting helper targets  | ON if top-level |
+| GPRAT_ENABLE_EXAMPLES       | Enable/disable example projects                | ON if top-level |
 
 Respective scripts can be found in this directory.
 
@@ -53,7 +54,9 @@ reference implementations based on TensorFlow
 
 - Go to [`examples/gprat_cpp`](examples/gprat_cpp/)
 - Set parameters in [`execute.cpp`](examples/gprat_cpp/src/execute.cpp)
-- Run `./run_gprat_cpp.sh` to build and run example
+- The example is built as part of the main project.
+  If you want to use an installed GPrat version:
+  Run `./run_gprat_cpp.sh` to build and run example
 
 ### To run GPRat with Python
 
