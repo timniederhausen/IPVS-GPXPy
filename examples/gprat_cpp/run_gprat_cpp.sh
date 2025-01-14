@@ -20,18 +20,14 @@ export CXX=g++
 # Configure APEX
 export APEX_SCREEN_OUTPUT=0
 export APEX_DISABLE=1
-# Configure MKL
-export MKL_CONFIG='-DMKL_ARCH=intel64 -DMKL_LINK=dynamic -DMKL_INTERFACE_FULL=intel_lp64 -DMKL_THREADING=sequential'
 
 ################################################################################
 # Compile code
 ################################################################################
 rm -rf build && mkdir build && cd build
 # Configure the project
-cmake .. -DCMAKE_BUILD_TYPE=Release \
-	 -DHPX_IGNORE_BOOST_COMPATIBILITY=ON \
-	 $MKL_CONFIG
- # Build the project
+cmake .. -DCMAKE_BUILD_TYPE=Release -DHPX_IGNORE_BOOST_COMPATIBILITY=ON
+# Build the project
 make -j VERBOSE=1 all
 
 ################################################################################
