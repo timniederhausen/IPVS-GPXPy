@@ -1,0 +1,6 @@
+gpflow
+tensorflow==2.13.1
+numpy==1.24.3
+gast==0.4.0
+tensorflow-probability==0.21.0
+typing-extensions==4.5.0
