@@ -1,5 +1,5 @@
 #include "../core/include/gp_functions.hpp"
-#include "../core/include/gpxpy_c.hpp"
+#include "../core/include/gprat_c.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -8,10 +8,10 @@ namespace py = pybind11;
 /**
  * @brief Adds classes `GP_data`, `Hyperparameters`, `GP` to Python module.
  */
-void init_gpxpy(py::module &m)
+void init_gprat(py::module &m)
 {
     // set training data with `GP_data` class
-    py::class_<gpxpy::GP_data>(
+    py::class_<gprat::GP_data>(
         m, "GP_data", "Class representing Gaussian Process data.")
         .def(py::init<std::string, int>(),
              py::arg("file_path"),
@@ -24,17 +24,17 @@ void init_gpxpy(py::module &m)
                  n_samples (int): Number of samples in the GP data.
              )pbdoc")
         .def_readonly("n_samples",
-                      &gpxpy::GP_data::n_samples,
+                      &gprat::GP_data::n_samples,
                       "Number of samples in the GP data")
         .def_readonly(
-            "file_path", &gpxpy::GP_data::file_path, "File path to the GP data")
+            "file_path", &gprat::GP_data::file_path, "File path to the GP data")
         .def_readonly(
-            "data", &gpxpy::GP_data::data, "Data in the GP data file");
+            "data", &gprat::GP_data::data, "Data in the GP data file");
 
     // Set hyperparameters to default values in `Hyperparameters` class, unless
     // specified. Python object has full access to each hyperparameter and a
     // string representation `__repr__`.
-    py::class_<gpxpy_hyper::Hyperparameters>(m, "Hyperparameters")
+    py::class_<gprat_hyper::Hyperparameters>(m, "Hyperparameters")
         .def(py::init<double,
                       double,
                       double,
@@ -50,14 +50,14 @@ void init_gpxpy(py::module &m)
              py::arg("m_T") = std::vector<double>{ 0.0, 0.0, 0.0 },
              py::arg("v_T") = std::vector<double>{ 0.0, 0.0, 0.0 })
         .def_readwrite("learning_rate",
-                       &gpxpy_hyper::Hyperparameters::learning_rate)
-        .def_readwrite("beta1", &gpxpy_hyper::Hyperparameters::beta1)
-        .def_readwrite("beta2", &gpxpy_hyper::Hyperparameters::beta2)
-        .def_readwrite("epsilon", &gpxpy_hyper::Hyperparameters::epsilon)
-        .def_readwrite("opt_iter", &gpxpy_hyper::Hyperparameters::opt_iter)
-        .def_readwrite("m_T", &gpxpy_hyper::Hyperparameters::M_T)
-        .def_readwrite("v_T", &gpxpy_hyper::Hyperparameters::V_T)
-        .def("__repr__", &gpxpy_hyper::Hyperparameters::repr);
+                       &gprat_hyper::Hyperparameters::learning_rate)
+        .def_readwrite("beta1", &gprat_hyper::Hyperparameters::beta1)
+        .def_readwrite("beta2", &gprat_hyper::Hyperparameters::beta2)
+        .def_readwrite("epsilon", &gprat_hyper::Hyperparameters::epsilon)
+        .def_readwrite("opt_iter", &gprat_hyper::Hyperparameters::opt_iter)
+        .def_readwrite("m_T", &gprat_hyper::Hyperparameters::M_T)
+        .def_readwrite("v_T", &gprat_hyper::Hyperparameters::V_T)
+        .def("__repr__", &gprat_hyper::Hyperparameters::repr);
     ;
 
     // Initializes Gaussian Process with `GP` class. Sets default parameters for
@@ -67,7 +67,7 @@ void init_gpxpy(py::module &m)
     // functions.
     // GPU support is disabled by default and may only be enabled on
     // initialization.
-    py::class_<gpxpy::GP>(m, "GP")
+    py::class_<gprat::GP>(m, "GP")
         .def(py::init<std::vector<double>,
                       std::vector<double>,
                       int,
@@ -104,32 +104,32 @@ Parameters:
     trainable (list): List of booleans for trainable hyperparameters. Default is
         {true, true, true}.
              )pbdoc")
-        .def_readwrite("lengthscale", &gpxpy::GP::lengthscale)
-        .def_readwrite("v_lengthscale", &gpxpy::GP::vertical_lengthscale)
-        .def_readwrite("noise_var", &gpxpy::GP::noise_variance)
-        .def_readwrite("n_reg", &gpxpy::GP::n_regressors)
-        .def("__repr__", &gpxpy::GP::repr)
-        .def("get_input_data", &gpxpy::GP::get_training_input)
-        .def("get_output_data", &gpxpy::GP::get_training_output)
+        .def_readwrite("lengthscale", &gprat::GP::lengthscale)
+        .def_readwrite("v_lengthscale", &gprat::GP::vertical_lengthscale)
+        .def_readwrite("noise_var", &gprat::GP::noise_variance)
+        .def_readwrite("n_reg", &gprat::GP::n_regressors)
+        .def("__repr__", &gprat::GP::repr)
+        .def("get_input_data", &gprat::GP::get_training_input)
+        .def("get_output_data", &gprat::GP::get_training_output)
         .def("predict",
-             &gpxpy::GP::predict,
+             &gprat::GP::predict,
              py::arg("test_data"),
              py::arg("m_tiles"),
              py::arg("m_tile_size"))
         .def("predict_with_uncertainty",
-             &gpxpy::GP::predict_with_uncertainty,
+             &gprat::GP::predict_with_uncertainty,
              py::arg("test_data"),
              py::arg("m_tiles"),
              py::arg("m_tile_size"))
         .def("predict_with_full_cov",
-             &gpxpy::GP::predict_with_full_cov,
+             &gprat::GP::predict_with_full_cov,
              py::arg("test_data"),
              py::arg("m_tiles"),
              py::arg("m_tile_size"))
-        .def("optimize", &gpxpy::GP::optimize, py::arg("hyperparams"))
+        .def("optimize", &gprat::GP::optimize, py::arg("hyperparams"))
         .def("optimize_step",
-             &gpxpy::GP::optimize_step,
+             &gprat::GP::optimize_step,
              py::arg("hyperparams"),
              py::arg("iter"))
-        .def("compute_loss", &gpxpy::GP::calculate_loss);
+        .def("compute_loss", &gprat::GP::calculate_loss);
 }

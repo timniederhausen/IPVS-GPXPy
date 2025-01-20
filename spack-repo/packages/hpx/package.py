@@ -95,6 +95,7 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
     variant("examples", default=False, description="Build examples")
     variant("async_mpi", default=False, description="Enable MPI Futures.")
     variant("async_cuda", default=False, description="Enable CUDA Futures.")
+    variant("static", default=False, description='Compile HPX statically linked libraries')
 
     # Build dependencies
     depends_on("python", type=("build", "test", "run"))
@@ -239,6 +240,7 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
             self.define_from_variant("HPX_WITH_EXAMPLES", "examples"),
             self.define_from_variant("HPX_WITH_ASYNC_MPI", "async_mpi"),
             self.define_from_variant("HPX_WITH_ASYNC_CUDA", "async_cuda"),
+            self.define_from_variant("HPX_WITH_STATIC_LINKING", "static"),
             self.define("HPX_WITH_TESTS", self.run_tests),
             self.define("HPX_WITH_NETWORKING", "networking=none" not in spec),
             self.define("HPX_WITH_PARCELPORT_TCP", spec.satisfies("networking=tcp")),

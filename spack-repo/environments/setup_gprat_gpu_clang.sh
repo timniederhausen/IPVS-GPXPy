@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Script to setup GPU spack environment for GPXPy on simcl1n1-2
+# Script to setup GPU spack environment for GPRat on simcl1n1-2
 set -e
 # create environment and copy config file
-spack env create gpxpy_gpu_clang
-cp spack_gpu_clang.yaml $HOME/spack/var/spack/environments/gpxpy_gpu_clang/spack.yaml
-spack env activate gpxpy_gpu_clang
+spack env create gprat_gpu_clang
+cp spack_gpu_clang.yaml $HOME/spack/var/spack/environments/gprat_gpu_clang/spack.yaml
+spack env activate gprat_gpu_clang
 # find external compiler
 module load clang/17.0.1
 spack compiler find

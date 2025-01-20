@@ -1,12 +1,12 @@
-#ifndef gpxpy_C_H
-#define gpxpy_C_H
+#ifndef gprat_C_H
+#define gprat_C_H
 
 #include "gp_functions.hpp"
 #include <string>
 #include <vector>
 
-// namespace for GPXPy library entities
-namespace gpxpy
+// namespace for GPRat library entities
+namespace gprat
 {
 
 /**
@@ -111,7 +111,7 @@ class GP
        std::vector<bool> trainable_bool);
 
     /**
-     * Returns Gaussian process attributes as string.
+     * Returns Gaussian Process attributes as string.
      */
     std::string repr() const;
 
@@ -161,7 +161,7 @@ class GP
      * @return losses
      */
     std::vector<double>
-    optimize(const gpxpy_hyper::Hyperparameters &hyperparams);
+    optimize(const gprat_hyper::Hyperparameters &hyperparams);
 
     /**
      * @brief Perform a single optimization step
@@ -172,7 +172,7 @@ class GP
      *
      * @return loss
      */
-    double optimize_step(gpxpy_hyper::Hyperparameters &hyperparams,
+    double optimize_step(gprat_hyper::Hyperparameters &hyperparams,
                          int iter);
 
     /**
@@ -185,6 +185,6 @@ class GP
      */
     std::vector<std::vector<double>> cholesky();
 };
-}  // namespace gpxpy
+}  // namespace gprat
 
 #endif

@@ -1,36 +1,34 @@
 import sys
 import time
 import os
-sys.path.append(os.path.abspath("../plot"))
 import logging
 from csv import writer
 from config import get_config
 from hpx_logger import setup_logging
 
-import gpxpy as gpx
-
+import gprat
 
 logger = logging.getLogger()
 log_filename = "./hpx_logs.log"
 
-def gpx_run(config, output_csv_obj, n_train, l, cores):
+def gprat_run(config, output_csv_obj, n_train, l, cores):
 
     total_t = time.time()
 
-    n_tile_size = gpx.compute_train_tile_size(n_train, config["N_TILES"])
-    m_tiles, m_tile_size = gpx.compute_test_tiles(config["N_TEST"], config["N_TILES"], n_tile_size)
-    hpar = gpx.Hyperparameters(learning_rate=0.1, opt_iter=config["OPT_ITER"], m_T=[0,0,0], v_T=[0,0,0])
-    train_in = gpx.GP_data(config["train_in_file"], n_train)
-    train_out = gpx.GP_data(config["train_out_file"], n_train)
-    test_in = gpx.GP_data(config["test_in_file"], config["N_TEST"])
+    n_tile_size = gprat.compute_train_tile_size(n_train, config["N_TILES"])
+    m_tiles, m_tile_size = gprat.compute_test_tiles(config["N_TEST"], config["N_TILES"], n_tile_size)
+    hpar = gprat.Hyperparameters(learning_rate=0.1, opt_iter=config["OPT_ITER"], m_T=[0,0,0], v_T=[0,0,0])
+    train_in = gprat.GP_data(config["train_in_file"], n_train)
+    train_out = gprat.GP_data(config["train_out_file"], n_train)
+    test_in = gprat.GP_data(config["test_in_file"], config["N_TEST"])
 
     ###### GP object ######
     init_t = time.time()
-    gp = gpx.GP(train_in.data, train_out.data, config["N_TILES"], n_tile_size, trainable=[True, True, True])
+    gp = gprat.GP(train_in.data, train_out.data, config["N_TILES"], n_tile_size, trainable=[True, True, True])
     init_t = time.time() - init_t
 
     # Init hpx runtime but do not start it yet
-    gpx.start_hpx(sys.argv, cores)
+    gprat.start_hpx(sys.argv, cores)
 
     # Perform optmization
     opti_t = time.time()
@@ -38,8 +36,8 @@ def gpx_run(config, output_csv_obj, n_train, l, cores):
     opti_t = time.time() - opti_t
     logger.info("Finished optimization.")
 
-    gpx.suspend_hpx()
-    gpx.resume_hpx()
+    #gprat.suspend_hpx()
+    #gprat.resume_hpx()
 
     # Predict
     pred_uncer_t = time.time()
@@ -60,7 +58,7 @@ def gpx_run(config, output_csv_obj, n_train, l, cores):
     logger.info("Finished predictions.")
 
     # Stop HPX runtime
-    gpx.stop_hpx()
+    gprat.stop_hpx()
 
     TOTAL_TIME = time.time() - total_t
     INIT_TIME = init_t
@@ -121,7 +119,7 @@ def execute():
             for l in range(config["LOOP"]):
                 logger.info("*" * 40)
                 logger.info(f"Core: {2**core}, Train Size: {data_size}, Loop: {l}")
-                gpx_run(config, output_csv_obj, data_size, l, 2**core)
+                gprat_run(config, output_csv_obj, data_size, l, 2**core)
 
 
 if __name__ == "__main__":

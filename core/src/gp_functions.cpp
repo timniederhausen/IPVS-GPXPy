@@ -9,7 +9,7 @@
 #include <sstream>
 #include <vector>
 
-namespace gpxpy_hyper
+namespace gprat_hyper
 {
 
 /**
@@ -52,7 +52,7 @@ std::string Hyperparameters::repr() const
     return oss.str();
 }
 
-}  // namespace gpxpy_hyper
+}  // namespace gprat_hyper
 
 /**
  * @brief Compute the predictions and uncertainties.
@@ -577,7 +577,7 @@ optimize_hpx(const std::vector<double> &training_input,
              double &vertical_lengthscale,
              double &noise_variance,
              int n_regressors,
-             const gpxpy_hyper::Hyperparameters &hyperparams,
+             const gprat_hyper::Hyperparameters &hyperparams,
              std::vector<bool> trainable_params)
 {
     double hyperparameters[7];
@@ -819,7 +819,7 @@ optimize_step_hpx(const std::vector<double> &training_input,
                   double &vertical_lengthscale,
                   double &noise_variance,
                   int n_regressors,
-                  gpxpy_hyper::Hyperparameters &hyperparams,
+                  gprat_hyper::Hyperparameters &hyperparams,
                   std::vector<bool> trainable_params,
                   int iter)
 {

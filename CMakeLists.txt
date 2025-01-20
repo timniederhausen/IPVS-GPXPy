@@ -1,20 +1,20 @@
-message(STATUS "Building Python language bindings for GPXPy.")
+message(STATUS "Building Python language bindings for GPRat.")
 
 cmake_minimum_required(VERSION 3.16)
 
-project(gpxpy)
+project(gprat)
 
 include(CMakeDependentOption)
 
 # What to build?
-option(GPXPY_BUILD_CORE "Build the core library" ON)
-cmake_dependent_option(GPXPY_BUILD_BINDINGS "Build the Python bindings" ON
-                       "GPXPY_BUILD_CORE" OFF)
+option(GPRAT_BUILD_CORE "Build the core library" ON)
+cmake_dependent_option(GPRAT_BUILD_BINDINGS "Build the Python bindings" ON
+                       "GPRAT_BUILD_CORE" OFF)
 
-option(GPXPY_ENABLE_FORMAT_TARGETS "Enable clang-format / cmake-format targets"
+option(GPRAT_ENABLE_FORMAT_TARGETS "Enable clang-format / cmake-format targets"
        ${PROJECT_IS_TOP_LEVEL})
 
-if(GPXPY_ENABLE_FORMAT_TARGETS)
+if(GPRAT_ENABLE_FORMAT_TARGETS)
   find_package(format QUIET)
   if(NOT format_FOUND)
     include(FetchContent)
@@ -27,7 +27,7 @@ if(GPXPY_ENABLE_FORMAT_TARGETS)
   endif()
 endif()
 
-if(GPXPY_BUILD_CORE)
+if(GPRAT_BUILD_CORE)
   set(MKL_INTERFACE_FULL "intel_lp64")
   set(MKL_THREADING "sequential")
 
@@ -35,7 +35,7 @@ if(GPXPY_BUILD_CORE)
   find_package(MKL CONFIG REQUIRED)
 
   add_subdirectory(core)
-  if(GPXPY_BUILD_BINDINGS)
+  if(GPRAT_BUILD_BINDINGS)
     add_subdirectory(bindings)
   endif()
 endif()
