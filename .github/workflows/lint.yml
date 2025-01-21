@@ -20,7 +20,7 @@ jobs:
       run: pip3 install cmakelang
 
     - name: Configure dummy project
-      run: cmake -B build-fmt -DGPXPY_BUILD_CORE=OFF -D CLANG_FORMAT_PROGRAM=$(which clang-format-18)
+      run: cmake -B build-fmt -DGPRAT_BUILD_CORE=OFF -D CLANG_FORMAT_PROGRAM=$(which clang-format-18)
 
     - name: Check code formatting
       id: clangformat

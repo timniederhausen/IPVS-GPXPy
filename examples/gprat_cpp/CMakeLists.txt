@@ -27,12 +27,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # CMakeLists.txt file
 get_filename_component(LIB_DIR "install/lib" ABSOLUTE)
 # Find the Gaussian Process library
-find_library(GPXPY_LIB gpxpy_core HINTS ${LIB_DIR} REQUIRED)
-message(STATUS "GPXPy core library found: ${GPXPY_LIB}")
+find_library(GPRAT_LIB gprat_core HINTS ${LIB_DIR} REQUIRED)
+message(STATUS "GPRat core library found: ${GPRAT_LIB}")
 
 # Add the executable
-add_executable(gpxpy_cpp src/execute.cpp)
+add_executable(gprat_cpp src/execute.cpp)
 # Link the libraries
 target_link_libraries(
-  gpxpy_cpp PUBLIC "${GPXPY_LIB}" HPX::hpx MKL::mkl_intel_lp64 MKL::mkl_core
+  gprat_cpp PUBLIC "${GPRAT_LIB}" HPX::hpx MKL::mkl_intel_lp64 MKL::mkl_core
                    MKL::MKL MKL::mkl_sequential)

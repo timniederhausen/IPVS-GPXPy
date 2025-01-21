@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 // #include <boost/program_options.hpp>
-#include "../install/include/gpxpy_c.hpp"
+#include "../install/include/gprat_c.hpp"
 #include "../install/include/utils_c.hpp"
 
 int main(int argc, char *argv[])
@@ -53,19 +53,19 @@ int main(int argc, char *argv[])
                 /////////////////////
                 ///// hyperparams
                 std::vector<double> M = { 0.0, 0.0, 0.0 };
-                gpxpy_hyper::Hyperparameters hpar = { 0.1, 0.9, 0.999, 1e-8, OPT_ITER, M };
+                gprat_hyper::Hyperparameters hpar = { 0.1, 0.9, 0.999, 1e-8, OPT_ITER, M };
 
                 /////////////////////
                 ////// data loading
-                gpxpy::GP_data training_input(train_path, n_train);
-                gpxpy::GP_data training_output(out_path, n_train);
-                gpxpy::GP_data test_input(test_path, n_test);
+                gprat::GP_data training_input(train_path, n_train);
+                gprat::GP_data training_output(out_path, n_train);
+                gprat::GP_data test_input(test_path, n_test);
 
                 /////////////////////
                 ///// GP
                 auto start_init = std::chrono::high_resolution_clock::now();
                 std::vector<bool> trainable = { false, false, true };
-                gpxpy::GP gp(training_input.data, training_output.data, n_tiles, tile_size, 1.0, 1.0, 0.1, n_reg, trainable);
+                gprat::GP gp(training_input.data, training_output.data, n_tiles, tile_size, 1.0, 1.0, 0.1, n_reg, trainable);
                 auto end_init = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> init_time = end_init - start_init;
 

@@ -4,7 +4,7 @@
 #include <hpx/future.hpp>
 #include <vector>
 
-namespace gpxpy_hyper
+namespace gprat_hyper
 {
 struct Hyperparameters
 {
@@ -22,7 +22,7 @@ struct Hyperparameters
     // Print Hyperparameter attributes
     std::string repr() const;
 };
-}  // namespace gpxpy_hyper
+}  // namespace gprat_hyper
 
 // Compute the predictions
 hpx::shared_future<std::vector<double>>
@@ -85,7 +85,7 @@ optimize_hpx(const std::vector<double> &training_input,
              double &vertical_lengthscale,
              double &noise_variance,
              int n_regressors,
-             const gpxpy_hyper::Hyperparameters &hyperparams,
+             const gprat_hyper::Hyperparameters &hyperparams,
              std::vector<bool> trainable_params);
 
 // Perform a single optimization step
@@ -98,7 +98,7 @@ optimize_step_hpx(const std::vector<double> &training_input,
                   double &vertical_lengthscale,
                   double &noise_variance,
                   int n_regressors,
-                  gpxpy_hyper::Hyperparameters &hyperparams,
+                  gprat_hyper::Hyperparameters &hyperparams,
                   std::vector<bool> trainable_params,
                   int iter);
 

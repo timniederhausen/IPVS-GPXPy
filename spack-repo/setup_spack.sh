@@ -10,5 +10,5 @@ source $HOME/spack/share/spack/setup-env.sh
 spack compiler find
 # find external software
 spack external find
-# add GPXPy spack-repo so spack
+# add GPRat spack-repo to spack
 spack repo add $(pwd)

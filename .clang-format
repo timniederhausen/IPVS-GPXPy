@@ -77,7 +77,7 @@ ForEachMacros: [ 'foreach', 'Q_FOREACH', 'BOOST_FOREACH' ]
 IfMacros: [ ]
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: '^"gpxpy/'
+  - Regex: '^"gprat/'
     Priority: 1
   - Regex: '^"(tests|bindings)/'
     Priority: 2

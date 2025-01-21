@@ -1,12 +1,12 @@
-#include "gpxpy_c.hpp"
+#include "gprat_c.hpp"
 
 #include "utils_c.hpp"
 #include <cstdio>
 #include <iomanip>
 #include <sstream>
 
-// namespace for GPXPy library entities
-namespace gpxpy
+// namespace for GPRat library entities
+namespace gprat
 {
 
 /**
@@ -172,7 +172,7 @@ std::vector<std::vector<double>> GP::predict_with_full_cov(
  * @return losses
  */
 std::vector<double>
-GP::optimize(const gpxpy_hyper::Hyperparameters &hyperparams)
+GP::optimize(const gprat_hyper::Hyperparameters &hyperparams)
 {
     std::vector<double> losses;
     hpx::run_as_hpx_thread([this, &losses, &hyperparams]()
@@ -194,7 +194,7 @@ GP::optimize(const gpxpy_hyper::Hyperparameters &hyperparams)
  *
  * @return loss
  */
-double GP::optimize_step(gpxpy_hyper::Hyperparameters &hyperparams,
+double GP::optimize_step(gprat_hyper::Hyperparameters &hyperparams,
                          int iter)
 {
     double loss;
@@ -243,4 +243,4 @@ std::vector<std::vector<double>> GP::cholesky()
     return result;
 }
 
-}  // namespace gpxpy
+}  // namespace gprat

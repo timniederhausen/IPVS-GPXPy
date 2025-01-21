@@ -11,15 +11,11 @@ module load gcc/13.2.0
 #module load cmake
 export CC=gcc
 export CXX=g++
-# Activate spack environment
-spack env activate gpxpy_cpu_gcc
 
 # # Load Clang compiler
 # module load clang/17.0.1
 # export CC=clang
 # export CXX=clang++
-# # Activate spack environment
-# spack env activate gpxpy_gpu_clang
 
 # Configure APEX
 export APEX_SCREEN_OUTPUT=1
@@ -31,11 +27,13 @@ export MKL_CONFIG='-DMKL_ARCH=intel64 -DMKL_LINK=dynamic -DMKL_INTERFACE_FULL=in
 ################################################################################
 rm -rf build && mkdir build && cd build
 # Configure the project
-cmake .. -DCMAKE_BUILD_TYPE=Release $MKL_CONFIG
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+	 -DHPX_IGNORE_BOOST_COMPATIBILITY=ON \
+	 $MKL_CONFIG
  # Build the project
 make -j VERBOSE=1 all
 
 ################################################################################
 # Run code
 ################################################################################
-./gpxpy_cpp
+./gprat_cpp
