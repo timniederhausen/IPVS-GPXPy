@@ -1,6 +1,6 @@
 # [GPRat: Gaussian Process Regression using Asynchronous Tasks]()
 
-This repository contains the source code for the GPRat library.
+This repository contains the source code for the GPRat library. ![](/data/images/ratward_icon.jpg) bar
 
 ## Dependencies
 
