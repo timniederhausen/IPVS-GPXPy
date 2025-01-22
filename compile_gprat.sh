@@ -8,21 +8,11 @@ set -e  # Exit immediately if a command exits with a non-zero status.
 # Configurations
 ################################################################################
 # Load GCC compiler
-module load gcc/13.2.0
-export CC=gcc
-export CXX=g++
+spack load gcc@14.2.0
+spack load cmake
+
 # Activate spack environment
 spack env activate gprat_cpu_gcc
-
-# # Load Clang compiler
-# module load clang/17.0.1
-# export CC=clang
-# export CXX=clang++
-# # Activate spack environment
-# spack env activate gprat_gpu_clang
-
-# Configure APEX
-#export APEX_SCREEN_OUTPUT=1
 
 # Bindings
 if [[ "$1" == "python" ]]
