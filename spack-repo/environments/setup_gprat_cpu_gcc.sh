@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
-# Script to setup CPU spack environment for GPRat on simcl1n1-4
+# Script to setup CPU spack environment for GPRat using a recent gcc
 set -e
-# create environment and copy config file
-spack env create gprat_cpu_gcc
-cp spack_cpu_gcc.yaml $HOME/spack/var/spack/environments/gprat_cpu_gcc/spack.yaml
-spack env activate gprat_cpu_gcc
-# find external compiler
-module load gcc/13.2.0
+# search for gcc compiler and install if necessary
 spack compiler find
-# find external packages
-#spack external find
+spack install gcc@14.2.0
+# create environment and copy config file
+export ENV_NAME=gprat_cpu_gcc
+spack env create $ENV_NAME
+cp spack_cpu_gcc.yaml $HOME/spack/var/spack/environments/$ENV_NAME/spack.yaml
+spack env activate $ENV_NAME
+# use external python
 spack external find python
-spack external find ninja
 # setup environment
 spack concretize -f
 spack install
