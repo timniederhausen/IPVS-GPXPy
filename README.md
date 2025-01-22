@@ -1,6 +1,8 @@
 # [GPRat: Gaussian Process Regression using Asynchronous Tasks]()
 
-This repository contains the source code for the GPRat library. ![](/data/images/ratward_icon.jpg) bar
+<img align="left" width="20%" src="/data/images/ratward_icon.jpg">
+
+GPRat is an open-source library for Gaussian Process Regression. Leveraging the asynchronous many-task runtime HPX, the we aim to combine the performance of anynchrnous paralleism in C++ with the ease-of-use of commonly available Python libraries. Thus GPRat can either be used in pure C++ projects or simply in Python.
 
 ## Dependencies
 
