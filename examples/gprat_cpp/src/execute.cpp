@@ -8,22 +8,22 @@ int main(int argc, char *argv[])
 {
     /////////////////////
     /////// configuration
-    int START = 1024;
-    int END = 1024;
-    int STEP = 128;
-    int LOOP = 1;
-    const int OPT_ITER = 1;
+    std::size_t START = 1024;
+    std::size_t END = 1024;
+    std::size_t STEP = 128;
+    std::size_t LOOP = 1;
+    const std::size_t OPT_ITER = 1;
 
     int n_test = 1024;
     const std::size_t N_CORES = 2;  // Set this to the number of threads
-    const int n_tiles = 32;
-    const int n_reg = 128;
+    const std::size_t n_tiles = 32;
+    const std::size_t n_reg = 128;
 
     std::string train_path = "../../../data/training/training_input.txt";
     std::string out_path = "../../../data/training/training_output.txt";
     std::string test_path = "../../../data/test/test_input.txt";
 
-    for (std::size_t core = 2; core <= pow(2, N_CORES); core = core * 2)
+    for (std::size_t core = 2; core <= static_cast<std::size_t>(pow(2, N_CORES)); core = core * 2)
     {
         // Create new argc and argv to include the --hpx:threads argument
         std::vector<std::string> args(argv, argv + argc);
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
         for (std::size_t start = START; start <= END; start = start + STEP)
         {
-            int n_train = start;
+            int n_train = static_cast<int>(start);
             for (std::size_t l = 0; l < LOOP; l++)
             {
                 auto start_total = std::chrono::high_resolution_clock::now();
@@ -73,13 +73,13 @@ int main(int argc, char *argv[])
 
                 // Measure the time taken to execute gp.cholesky();
                 auto start_cholesky = std::chrono::high_resolution_clock::now();
-                // std::vector<std::vector<double>> choleksy = gp.cholesky();
+                std::vector<std::vector<double>> choleksy = gp.cholesky();
                 auto end_cholesky = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double> cholesky_time = end_cholesky - end_cholesky;
+                std::chrono::duration<double> cholesky_time = end_cholesky - start_cholesky;
 
                 // Measure the time taken to execute gp.optimize(hpar);
                 auto start_opt = std::chrono::high_resolution_clock::now();
-                // std::vector<double> losses = gp.optimize(hpar);
+                std::vector<double> losses = gp.optimize(hpar);
                 auto end_opt = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> opt_time = end_opt - start_opt;
 
