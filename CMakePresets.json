@@ -166,7 +166,7 @@
       "binaryDir": "${sourceDir}/build/release-linux",
       "inherits": ["ci-linux"],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     }
@@ -180,7 +180,7 @@
     {
       "name": "release-linux",
       "configurePreset": "release-linux",
-      "configuration": "RelWithDebInfo"
+      "configuration": "Release"
     }
   ],
   "testPresets": [
