@@ -22,7 +22,7 @@ export APEX_DISABLE=1
 ################################################################################
 rm -rf build && mkdir build && cd build
 # Configure the project
-cmake .. -DCMAKE_BUILD_TYPE=Release -DHPX_IGNORE_BOOST_COMPATIBILITY=ON
+cmake .. -DCMAKE_BUILD_TYPE=Release -DGPRat_DIR=./lib/cmake/GPRat
  # Build the project
 make -j
 
