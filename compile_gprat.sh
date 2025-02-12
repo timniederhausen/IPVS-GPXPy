@@ -42,4 +42,6 @@ cmake --preset $PRESET \
       -DGPRAT_ENABLE_FORMAT_TARGETS=OFF
 cmake --build --preset $PRESET -- -j
 cmake --install build/$PRESET
-# ctest --preset $PRESET
+
+cd build/$PRESET
+ctest --output-on-failure --no-tests=ignore -C Release -j 2
