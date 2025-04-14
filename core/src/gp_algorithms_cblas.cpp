@@ -1,5 +1,6 @@
 #include "../include/gp_algorithms_cpu.hpp"
 #include <cmath>
+#include <iterator>
 
 /////////////////////////////////////////////////////////
 // Tile generation

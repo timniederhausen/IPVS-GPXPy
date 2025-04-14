@@ -1,6 +1,7 @@
 #include "../include/gp_optimizer.hpp"
 
 #include "../include/adapter_cblas_fp64.hpp"
+#include <numbers>
 #include <numeric>
 
 ///////////////////////////////////////////////////////////
@@ -209,7 +210,7 @@ double add_losses(const std::vector<double> &losses, std::size_t N, std::size_t 
         l += losses[i];
     }
 
-    l += Nn * log(2.0 * M_PI);
+    l += Nn * log(2.0 * std::numbers::pi);
     return 0.5 * l / Nn;  // why /Nn?
 }
 

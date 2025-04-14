@@ -30,7 +30,7 @@ target_link_libraries(
 target_include_directories(
   gprat_core PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/core/include>")
 
-target_compile_features(gprat_core PUBLIC cxx_std_17)
+target_compile_features(gprat_core PUBLIC cxx_std_20)
 
 set_property(TARGET gprat_core PROPERTY POSITION_INDEPENDENT_CODE ON)
 

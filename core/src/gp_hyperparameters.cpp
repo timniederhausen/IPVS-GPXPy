@@ -1,6 +1,7 @@
 #include "../include/gp_hyperparameters.hpp"
 
 #include <iomanip>
+#include <sstream>
 
 namespace gprat_hyper
 {
