@@ -40,6 +40,16 @@ int compute_train_tile_size(int n_samples, int n_tiles);
 std::pair<int, int> compute_test_tiles(int n_test, int n_tiles, int n_tile_size);
 
 /**
+ * @brief Computes a good-enough guess for the number of tiles per dimension.
+ *
+ * This guess is based on experiments ran on a single dual-socket 64 core machine.
+ * It might not be appropriate for distributed scenarios.
+ *
+ * @param n Number of samples
+ */
+std::size_t guess_good_tile_count_per_dimension(std::size_t n);
+
+/**
  * @brief Load data from file
  *
  * @param file_path Path to the file
