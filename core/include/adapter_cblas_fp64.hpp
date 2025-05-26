@@ -2,7 +2,9 @@
 #define ADAPTER_CBLAS_FP64_H
 
 #include <hpx/future.hpp>
+#include <span>
 #include <vector>
+
 using vector_future = hpx::shared_future<std::vector<double>>;
 
 // Constants that are compatible with CBLAS
@@ -23,6 +25,21 @@ typedef enum BLAS_ALPHA { Blas_add = 1, Blas_substract = -1 } BLAS_ALPHA;
 // =============================================================================
 
 // BLAS level 3 operations -------------------------------------- {{{
+
+namespace inplace
+{
+void potrf(std::span<double> A, int N);
+void trsm(std::span<const double> L, std::span<double> A, int N, int M, BLAS_TRANSPOSE transpose_L, BLAS_SIDE side_L);
+void syrk(std::span<double> A, std::span<const double> B, int N);
+void gemm(std::span<const double> A,
+          std::span<const double> B,
+          std::span<double> C,
+          int N,
+          int M,
+          int K,
+          BLAS_TRANSPOSE transpose_A,
+          BLAS_TRANSPOSE transpose_B);
+}  // namespace inplace
 
 /**
  * @brief FP64 In-place Cholesky decomposition of A

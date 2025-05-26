@@ -1,10 +1,83 @@
 #include "../include/adapter_cblas_fp64.hpp"
 
+#include <span>
+
 // MKL CBLAS and LAPACKE
 #include "mkl_cblas.h"
 #include "mkl_lapacke.h"
 
 // BLAS level 3 operations -------------------------------------- {{{
+
+namespace inplace
+{
+void potrf(std::span<double> A, int N)
+{
+    // POTRF: in-place Cholesky decomposition of A
+    // use dpotrf2 recursive version for better stability
+    LAPACKE_dpotrf2(LAPACK_ROW_MAJOR, 'L', N, A.data(), N);
+}
+
+void trsm(std::span<const double> L, std::span<double> A, int N, int M, BLAS_TRANSPOSE transpose_L, BLAS_SIDE side_L)
+{
+    // TRSM constants
+    const double alpha = 1.0;
+    // TRSM: in-place solve L(^T) * X = A or X * L(^T) = A where L lower triangular
+    cblas_dtrsm(
+        CblasRowMajor,
+        static_cast<CBLAS_SIDE>(side_L),
+        CblasLower,
+        static_cast<CBLAS_TRANSPOSE>(transpose_L),
+        CblasNonUnit,
+        N,
+        M,
+        alpha,
+        L.data(),
+        N,
+        A.data(),
+        M);
+}
+
+void syrk(std::span<double> A, std::span<const double> B, int N)
+{
+    // SYRK constants
+    const double alpha = -1.0;
+    const double beta = 1.0;
+    // SYRK:A = A - B * B^T
+    cblas_dsyrk(CblasRowMajor, CblasLower, CblasNoTrans, N, N, alpha, B.data(), N, beta, A.data(), N);
+}
+
+void gemm(std::span<const double> A,
+          std::span<const double> B,
+          std::span<double> C,
+          int N,
+          int M,
+          int K,
+          BLAS_TRANSPOSE transpose_A,
+          BLAS_TRANSPOSE transpose_B)
+{
+    // GEMM constants
+    const double alpha = -1.0;
+    const double beta = 1.0;
+    // GEMM: C = C - A(^T) * B(^T)
+    cblas_dgemm(
+        CblasRowMajor,
+        static_cast<CBLAS_TRANSPOSE>(transpose_A),
+        static_cast<CBLAS_TRANSPOSE>(transpose_B),
+        K,
+        M,
+        N,
+        alpha,
+        A.data(),
+        K,
+        B.data(),
+        M,
+        beta,
+        C.data(),
+        M);
+}
+}  // namespace inplace
+
+// old:
 
 vector_future potrf(vector_future f_A, const int N)
 {
