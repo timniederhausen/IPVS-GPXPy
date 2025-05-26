@@ -7,6 +7,7 @@
 #include "gprat/tile_data.hpp"
 
 #include <hpx/future.hpp>
+#include <span>
 #include <vector>
 
 GPRAT_NS_BEGIN
@@ -25,6 +26,21 @@ typedef enum BLAS_ALPHA { Blas_add = 1, Blas_substract = -1 } BLAS_ALPHA;
 //                              Blas_col_major = 102 } BLAS_ORDERING;
 
 // BLAS level 3 operations
+
+namespace inplace
+{
+void potrf(std::span<double> A, int N);
+void trsm(std::span<const double> L, std::span<double> A, int N, int M, BLAS_TRANSPOSE transpose_L, BLAS_SIDE side_L);
+void syrk(std::span<double> A, std::span<const double> B, int N);
+void gemm(std::span<const double> A,
+          std::span<const double> B,
+          std::span<double> C,
+          int N,
+          int M,
+          int K,
+          BLAS_TRANSPOSE transpose_A,
+          BLAS_TRANSPOSE transpose_B);
+}  // namespace inplace
 
 /**
  * @brief FP64 In-place Cholesky decomposition of A
