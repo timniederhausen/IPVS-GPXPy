@@ -5,5 +5,5 @@
 
   mirrors:
     local-buildcache:
-      url: oci://ghcr.io/constracktor/spack-buildcache
+      url: oci://ghcr.io/SC-SGS/spack-buildcache
       signed: false
