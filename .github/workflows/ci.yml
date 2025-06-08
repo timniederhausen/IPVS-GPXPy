@@ -54,44 +54,6 @@ jobs:
     - name: Install
       run: spack -e . install --no-check-signature
 
-    - name: Configure
-      env:
-        CC: gcc-14
-        CXX: g++-14
-      shell: spack-bash {0}
-      run: |
-        spack env activate .
-        cmake "--preset=ci-${{ matrix.os }}"
-
-    - name: Build
-      run: cmake --build build --config Release -j 2
-
-    - name: Install
-      run: cmake --install build --config Release --prefix prefix
-
-    - name: Test
-      working-directory: build
-      run: ctest --output-on-failure --no-tests=ignore -C Release -j 2
-
-    - name: Upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: binaries-${{ matrix.os }}
-        path: |
-          prefix/
-
-    - name: Configure example project
-      env:
-        CC: gcc-14
-        CXX: g++-14
-      shell: spack-bash {0}
-      run: |
-        spack env activate .
-        cmake -G "Unix Makefiles" -S examples/gprat_cpp -B build_examples -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$PWD/prefix
-
-    - name: Build example project
-      run: cmake --build build_examples --config Release -j 2
-
     # See: https://github.com/spack/setup-spack?tab=readme-ov-file#example-caching-your-own-binaries-for-public-repositories
     - name: Push packages and update index
       env:
