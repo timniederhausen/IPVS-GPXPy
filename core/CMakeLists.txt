@@ -11,6 +11,7 @@ add_compile_definitions(GPRAT_WITH_CUDA=$<BOOL:${GPRAT_WITH_CUDA}>)
 set(SOURCE_FILES
     src/gprat.cpp
     src/utils.cpp
+    src/performance_counters.cpp
     src/target.cpp
     src/kernels.cpp
     src/hyperparameters.cpp
