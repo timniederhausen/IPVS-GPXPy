@@ -1,18 +1,19 @@
+# Option for GPU support with CUDA, cuSolver, cuBLAS
+option(GPRAT_WITH_CUDA "Enable GPU support with CUDA, cuSolver, cuBLAS" OFF)
+
 if(GPRAT_WITH_CUDA)
   enable_language(CUDA)
 endif()
 
-# Option for GPU support with CUDA, cuSolver, cuBLAS
-option(GPRAT_WITH_CUDA "Enable GPU support with CUDA, cuSolver, cuBLAS" OFF)
 # Pass variable to C++ code
 add_compile_definitions(GPRAT_WITH_CUDA=$<BOOL:${GPRAT_WITH_CUDA}>)
 
 set(SOURCE_FILES
-    src/gprat_c.cpp
-    src/utils_c.cpp
+    src/gprat.cpp
+    src/utils.cpp
     src/target.cpp
-    src/gp_kernels.cpp
-    src/gp_hyperparameters.cpp
+    src/kernels.cpp
+    src/hyperparameters.cpp
     src/cpu/gp_functions.cpp
     src/cpu/gp_algorithms.cpp
     src/cpu/gp_uncertainty.cpp
