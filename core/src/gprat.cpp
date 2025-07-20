@@ -332,7 +332,7 @@ double GP::calculate_loss()
         .get();
 }
 
-std::vector<std::vector<double>> GP::cholesky()
+std::vector<mutable_tile_data<double>> GP::cholesky()
 {
     return hpx::async(
                [this]()

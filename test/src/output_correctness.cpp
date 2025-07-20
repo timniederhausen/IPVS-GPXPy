@@ -41,6 +41,36 @@ void tag_invoke(boost::json::value_from_tag, boost::json::value &jv, const gprat
     };
 }
 
+template <typename T>
+std::vector<T> to_vector(const gprat::const_tile_data<T>& data)
+{
+    return { data.begin(), data.end() };
+}
+
+template <typename T>
+std::vector<std::vector<T>> to_vector(const std::vector<gprat::const_tile_data<T>>& data)
+{
+    std::vector<std::vector<T>> out;
+    out.reserve(data.size());
+    for (const auto& row : data)
+    {
+        out.emplace_back(to_vector<T>(row));
+    }
+    return out;
+}
+
+template <typename T>
+std::vector<std::vector<T>> to_vector(const std::vector<gprat::mutable_tile_data<T>>& data)
+{
+    std::vector<std::vector<T>> out;
+    out.reserve(data.size());
+    for (const auto& row : data)
+    {
+        out.emplace_back(to_vector<T>(row));
+    }
+    return out;
+}
+
 // This helper function deduces the type and assigns the value with the matching key
 template <typename T>
 inline void extract(const boost::json::object &obj, T &t, std::string_view key)
@@ -94,15 +124,10 @@ gprat_results run_on_data_cpu(const std::string &train_path, const std::string &
     gprat::start_hpx_runtime(0, nullptr);
 
     gprat_results results_cpu;
-
-    results_cpu.choleksy = gp_cpu.cholesky();
-
+    results_cpu.choleksy = to_vector(gp_cpu.cholesky());
     results_cpu.losses = gp_cpu.optimize(hpar);
-
     results_cpu.sum = gp_cpu.predict_with_uncertainty(test_input.data, test_tiles.first, test_tiles.second);
-
     results_cpu.full = gp_cpu.predict_with_full_cov(test_input.data, test_tiles.first, test_tiles.second);
-
     results_cpu.pred = gp_cpu.predict(test_input.data, test_tiles.first, test_tiles.second);
 
     // Stop the HPX runtime
@@ -143,7 +168,7 @@ gprat_results run_on_data_gpu(const std::string &train_path, const std::string &
     gprat::start_hpx_runtime(0, nullptr);
 
     gprat_results results_gpu;
-    results_gpu.choleksy = gp_gpu.cholesky();
+    results_gpu.choleksy = to_vector(gp_gpu.cholesky());
     // NOTE: optimize and optimize_step are currently not implemented for GPU
     results_gpu.sum_no_optimize = gp_gpu.predict_with_uncertainty(test_input.data, test_tiles.first, test_tiles.second);
     results_gpu.full_no_optimize = gp_gpu.predict_with_full_cov(test_input.data, test_tiles.first, test_tiles.second);
