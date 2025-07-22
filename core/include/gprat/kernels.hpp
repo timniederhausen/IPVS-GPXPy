@@ -6,6 +6,7 @@
 #include "gprat/detail/config.hpp"
 
 #include <cstddef>
+#include <memory>
 #include <vector>
 
 GPRAT_NS_BEGIN
@@ -78,6 +79,31 @@ struct SEKParams
      */
     const double &get_param(std::size_t index) const;
 };
+
+template <class Archive>
+void save_construct_data(Archive &ar, const SEKParams *v, const unsigned int)
+{
+    ar << v->lengthscale;
+    ar << v->vertical_lengthscale;
+    ar << v->noise_variance;
+}
+
+template <class Archive>
+void load_construct_data(Archive &ar, SEKParams *v, const unsigned int)
+{
+    double lengthscale, vertical_lengthscale, noise_variance;
+    ar >> lengthscale;
+    ar >> vertical_lengthscale;
+    ar >> noise_variance;
+
+    std::construct_at(v, lengthscale, vertical_lengthscale, noise_variance);
+}
+
+template <typename Archive>
+void serialize(Archive &ar, SEKParams &pt, const unsigned int)
+{
+    ar & pt.m_T & pt.w_T;
+}
 
 GPRAT_NS_END
 
