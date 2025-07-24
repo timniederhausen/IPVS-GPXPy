@@ -24,6 +24,9 @@ GPRAT_REGISTER_TILED_DATASET(double, double);
 
 GPRAT_NS_BEGIN
 
+hpx::mutex g_mtx;
+std::vector<std::weak_ptr<void>> g_buffers;
+
 hpx::future<tile_handle<double>> gen_tile_covariance_distributed(
     tile_handle<double> tile,
     std::size_t row,
@@ -136,7 +139,10 @@ cholesky_hpx(Scheduler &sched,
             result[i * n_tiles + j] = tiles[i * n_tiles + j].get();
         }
     }
-    // hpx::get_runtime_distributed().evaluate_active_counters(false, "POST cholesky");
+
+    std::cerr << "TOTAL crated: " << g_buffers.size() << std::endl;
+    //__debugbreak();
+    hpx::get_runtime_distributed().evaluate_active_counters(false, "POST cholesky");
     return result;
 }
 

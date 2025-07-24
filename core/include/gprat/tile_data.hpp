@@ -6,10 +6,14 @@
 #include "gprat/detail/config.hpp"
 #include "gprat/performance_counters.hpp"
 
+#include <hpx/synchronization/mutex.hpp>
 #include <hpx/serialization/serialize_buffer.hpp>
 #include <span>
 
 GPRAT_NS_BEGIN
+
+extern hpx::mutex g_mtx;
+extern std::vector<std::weak_ptr<void>> g_buffers;
 
 /**
  * @brief Non-mutable reference-counted dynamic array of a given type T.
@@ -57,7 +61,10 @@ class const_tile_data
     // Create a new (uninitialized) tile_data of the given size.
     explicit const_tile_data(std::size_t size) :
         cpu_data_(allocate(size), size, cpu_buffer_type::take, &const_tile_data::deallocate)
-    { }
+    {
+        std::lock_guard<hpx::mutex> guard(g_mtx);
+        g_buffers.emplace_back(cpu_data_.data_array());
+    }
 
     // Create a tile_data which acts as a proxy to a part of the embedded array.
     // The proxy is assumed to refer to either the left or the right boundary
