@@ -12,8 +12,10 @@
 
 GPRAT_NS_BEGIN
 
+#ifdef GPRAT_TRACK_TILE_DATA
 extern hpx::mutex g_mtx;
 extern std::vector<std::weak_ptr<void>> g_buffers;
+#endif
 
 /**
  * @brief Non-mutable reference-counted dynamic array of a given type T.
@@ -62,8 +64,10 @@ class const_tile_data
     explicit const_tile_data(std::size_t size) :
         cpu_data_(allocate(size), size, cpu_buffer_type::take, &const_tile_data::deallocate)
     {
+#ifdef GPRAT_TRACK_TILE_DATA
         std::lock_guard<hpx::mutex> guard(g_mtx);
         g_buffers.emplace_back(cpu_data_.data_array());
+#endif
     }
 
     // Create a tile_data which acts as a proxy to a part of the embedded array.
