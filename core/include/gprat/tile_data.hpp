@@ -92,6 +92,11 @@ class const_tile_data
         return { cpu_data_.data(), cpu_data_.size() };
     }
 
+    friend bool operator==(const const_tile_data &a, const const_tile_data& b) noexcept
+    {
+        return a.cpu_data_ == b.cpu_data_;
+    }
+
   protected:
     // Serialization support: even if all of the code below runs on one
     // locality only, we need to provide an (empty) implementation for the
