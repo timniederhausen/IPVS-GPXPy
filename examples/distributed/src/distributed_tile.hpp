@@ -155,11 +155,11 @@ struct tile_manager_shared_data
         { }
 
         tile_entry(hpx::id_type tile, std::uint32_t locality_id) :
-            tile(std::move(tile)),
+            id(std::move(tile)),
             locality_id(locality_id)
         { }
 
-        hpx::id_type tile;
+        hpx::id_type id;
         std::uint32_t locality_id;
         std::shared_ptr<tile_holder<T>> local_data;
 
@@ -169,7 +169,7 @@ struct tile_manager_shared_data
         template <typename Archive>
         void serialize(Archive &ar, unsigned)
         {
-            ar & tile & locality_id;
+            ar & id & locality_id;
         }
     };
 
@@ -196,7 +196,7 @@ struct tile_manager : hpx::components::component_base<tile_manager<T>>
         {
             if (tile.locality_id == here)
             {
-                tile.local_data = hpx::get_ptr<tile_holder<T>>(hpx::launch::sync, tile.tile);
+                tile.local_data = hpx::get_ptr<tile_holder<T>>(hpx::launch::sync, tile.id);
             }
         }
     }
@@ -214,17 +214,17 @@ struct tile_manager : hpx::components::component_base<tile_manager<T>>
         // Next, try the tile cache - maybe we have current data
         {
             mutable_tile_data<T> cached_data;
-            if (cache_.try_get(target_tile.tile.get_gid(), generation, cached_data))
+            if (cache_.try_get(target_tile.id.get_gid(), generation, cached_data))
             {
                 return cached_data;
             }
         }
 
         hpx::chrono::high_resolution_timer timer;
-        auto data = hpx::async(typename tile_holder<T>::get_data_action{}, target_tile.tile).get();
+        auto data = hpx::async(typename tile_holder<T>::get_data_action{}, target_tile.id).get();
 
         record_transmission_time(timer.elapsed_nanoseconds());
-        cache_.insert(target_tile.tile.get_gid(), generation, data);
+        cache_.insert(target_tile.id.get_gid(), generation, data);
 
         return data;
     }
@@ -242,15 +242,15 @@ struct tile_manager : hpx::components::component_base<tile_manager<T>>
         // Next, try the tile cache - maybe we have current data
         {
             mutable_tile_data<T> cached_data;
-            if (cache_.try_get(target_tile.tile.get_gid(), generation, cached_data))
+            if (cache_.try_get(target_tile.id.get_gid(), generation, cached_data))
             {
                 return hpx::make_ready_future(cached_data);
             }
         }
 
-        return hpx::async(typename tile_holder<T>::get_data_action{}, target_tile.tile)
+        return hpx::async(typename tile_holder<T>::get_data_action{}, target_tile.id)
             .then(
-                [this, generation, gid = target_tile.tile.get_gid(), timer = hpx::chrono::high_resolution_timer()](
+                [this, generation, gid = target_tile.id.get_gid(), timer = hpx::chrono::high_resolution_timer()](
                     hpx::future<mutable_tile_data<T>> &&f)
                 {
                     record_transmission_time(timer.elapsed_nanoseconds());
@@ -272,9 +272,9 @@ struct tile_manager : hpx::components::component_base<tile_manager<T>>
         }
 
         // We'd lose this tile after writing it, best to put it in the cache for now
-        cache_.insert(target_tile.tile.get_gid(), generation, data);
+        cache_.insert(target_tile.id.get_gid(), generation, data);
 
-        return hpx::async(typename tile_holder<T>::set_data_action{}, target_tile.tile, data);
+        return hpx::async(typename tile_holder<T>::set_data_action{}, target_tile.id, data);
     }
 
   private:
